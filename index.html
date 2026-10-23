@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#081321">
+  <meta name="description" content="A configurable, mobile-friendly dashboard for your self-hosted applications and homelab services.">
+  <title>Home Lab Companion</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/styles.css">\n  <style>.demo-safety-banner{display:flex;gap:.75rem;align-items:center;justify-content:center;flex-wrap:wrap;padding:.65rem 1rem;background:#092b3d;border-bottom:1px solid #00d9f5;color:#eafaff;font:500 .85rem/1.4 system-ui,sans-serif;text-align:center}.demo-safety-banner strong{color:#27e5ff;letter-spacing:.08em}.demo-safety-banner span{opacity:.9}</style>
+</head>
+<body>
+  <div class="demo-safety-banner" role="note">
+    <strong>DEMO ENVIRONMENT</strong>
+    <span>Sample data only · No live NAS connection · Service links are intentionally blank</span>
+  </div>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <a class="brand" href="#" aria-label="Home Lab Companion home">
+        <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 48 48"><path d="M5 22 24 7l19 15v20H5Z"/><path d="M17 42V27h14v15M12 22h24"/></svg></span>
+        <span><strong>HOME LAB</strong><small>COMPANION</small></span>
+      </a>
+      <div class="side-label">WORKSPACE</div>
+      <button class="nav-item active" data-view="overview"><span class="nav-icon">⌂</span> Overview</button>
+      <button class="nav-item" data-view="applications"><span class="nav-icon">▦</span> Applications <span class="nav-count" id="appCount">0</span></button>
+      <button class="nav-item" data-view="infrastructure"><span class="nav-icon">▤</span> Infrastructure</button>
+      <div class="side-label category-label">CATEGORIES</div>
+      <div id="categoryNav" class="category-nav"></div>
+      <div class="sidebar-bottom">
+        <div class="local-card"><span class="status-dot"></span><div><strong>Local-first dashboard</strong><small>Your configuration stays in this browser.</small></div></div>
+        <button class="nav-item" data-view="settings"><span class="nav-icon">⚙</span> Settings & Import</button>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <button class="mobile-menu" id="menuBtn" aria-label="Open navigation">☰</button>
+        <div class="crumb"><span>Workspace</span><b>/</b><strong id="breadcrumb">Overview</strong></div>
+        <div class="top-actions">
+          <label class="search-box"><span>⌕</span><input id="globalSearch" type="search" placeholder="Search apps..." aria-label="Search applications"><kbd>/</kbd></label>
+          <button class="icon-button" id="themeBtn" title="Toggle contrast theme" aria-label="Toggle contrast theme">◐</button>
+          <button class="avatar" title="Home Lab Companion">HL</button>
+        </div>
+      </header>
+
+      <section class="content">
+        <div class="view" id="overviewView">
+          <div class="hero">
+            <div class="hero-copy">
+              <div class="eyebrow"><span class="pulse"></span> YOUR SELF-HOSTED WORKSPACE</div>
+              <h1>Your homelab,<br><em>all in one place.</em></h1>
+              <p>A single launchpad for the apps, services, and systems that power your home lab.</p>
+              <div class="hero-buttons"><button class="primary-btn" id="browseApps">Browse applications <span>→</span></button><button class="quiet-btn" data-view="settings">Customize workspace</button></div>
+            </div>
+            <div class="hero-art" aria-hidden="true">
+              <div class="orbit orbit-one"></div><div class="orbit orbit-two"></div>
+              <div class="server-stack"><div class="server-unit"><i></i><i></i><i></i><span>CORE</span></div><div class="server-unit"><i></i><i></i><i></i><span>DATA</span></div><div class="server-unit"><i></i><i></i><i></i><span>APPS</span></div></div>
+              <div class="art-chip chip-top">SELF-HOSTED <b>●</b></div><div class="art-chip chip-bottom"><span class="mini-bars">▂▅▇</span> BUILT FOR YOUR LAB</div>
+            </div>
+          </div>
+
+          <div class="section-heading"><div><div class="eyebrow muted">AT A GLANCE</div><h2>Workspace overview</h2></div><span class="updated" id="lastUpdated">Ready to configure</span></div>
+          <div class="stat-grid">
+            <article class="stat-card"><div class="stat-icon cyan">▦</div><div><span>Applications</span><strong id="statApps">0</strong><small>In your directory</small></div></article>
+            <article class="stat-card"><div class="stat-icon violet">▤</div><div><span>Categories</span><strong id="statCategories">0</strong><small>Ways to organize</small></div></article>
+            <article class="stat-card"><div class="stat-icon green">★</div><div><span>Favorites</span><strong id="statFavorites">0</strong><small>Quick access</small></div></article>
+            <article class="stat-card"><div class="stat-icon amber">↗</div><div><span>Configured links</span><strong id="statLinks">0</strong><small>Ready to open</small></div></article>
+          </div>
+
+          <div class="section-heading apps-heading"><div><div class="eyebrow muted">QUICK ACCESS</div><h2>Favorite applications</h2></div><button class="text-btn" id="allFavorites">View all →</button></div>
+          <div class="app-grid" id="favoriteGrid"></div>
+
+          <div class="section-heading apps-heading"><div><div class="eyebrow muted">YOUR ECOSYSTEM</div><h2>Browse by category</h2></div></div>
+          <div class="category-cards" id="categoryCards"></div>
+          <div class="notice"><span class="notice-icon">i</span><div><strong>Connection status is not monitored in this starter version.</strong><p>Cards open configured URLs. A link being listed does not mean the service is currently online. Live checks can be added later through a secure backend.</p></div></div>
+        </div>
+
+        <div class="view hidden" id="applicationsView">
+          <div class="page-heading"><div><div class="eyebrow muted">SERVICE DIRECTORY</div><h1 id="appsTitle">Applications</h1><p>Find and open the services in your homelab.</p></div><button class="primary-btn" id="addAppBtn">＋ Add application</button></div>
+          <div class="filter-row"><div class="filter-chips" id="filterChips"></div><select id="sortSelect" aria-label="Sort applications"><option value="name">Sort: Name</option><option value="category">Sort: Category</option><option value="favorites">Sort: Favorites first</option></select></div>
+          <div class="app-grid" id="applicationGrid"></div>
+          <div class="empty-state hidden" id="emptyApps"><div>⌕</div><h3>No applications found</h3><p>Try another search or add an application to your directory.</p><button class="primary-btn" id="emptyAddBtn">＋ Add application</button></div>
+        </div>
+
+        <div class="view hidden" id="infrastructureView">
+          <div class="page-heading"><div><div class="eyebrow muted">YOUR ENVIRONMENT</div><h1>Infrastructure</h1><p>Keep your NAS devices, hosts, and core administration tools together.</p></div><button class="primary-btn" id="infraAddBtn">＋ Add application</button></div>
+          <div class="infra-banner"><div class="infra-symbol">⌘</div><div><strong>Infrastructure directory</strong><p>This is an organizational view, not a live inventory of your machines. Add the hosts and management interfaces you want to reach quickly.</p></div></div>
+          <div class="app-grid" id="infrastructureGrid"></div>
+        </div>
+
+        <div class="view hidden" id="settingsView">
+          <div class="page-heading"><div><div class="eyebrow muted">PREFERENCES</div><h1>Settings & Import</h1><p>Personalize this dashboard and move your app directory between browsers.</p></div></div>
+          <div class="settings-layout">
+            <section class="settings-card"><div class="settings-title"><div class="settings-icon">✎</div><div><h2>Workspace identity</h2><p>Change the name shown in the header.</p></div></div><label class="field-label" for="workspaceName">Workspace name</label><input class="field" id="workspaceName" maxlength="40" placeholder="Home Lab Companion"><button class="primary-btn" id="saveWorkspace">Save workspace</button></section>
+            <section class="settings-card"><div class="settings-title"><div class="settings-icon">⇄</div><div><h2>Configuration backup</h2><p>Export or import your app directory as JSON.</p></div></div><div class="settings-actions"><button class="secondary-btn" id="exportBtn">↓ Export configuration</button><label class="secondary-btn file-label">↑ Import configuration<input type="file" id="importFile" accept=".json,application/json" hidden></label></div><p class="helper">Import replaces the current app directory after validation. Export regularly if you want to preserve your settings.</p></section>
+            <section class="settings-card"><div class="settings-title"><div class="settings-icon">＋</div><div><h2>Application directory</h2><p>Add, edit, or remove entries from this browser.</p></div></div><div class="settings-actions"><button class="primary-btn" id="settingsAddBtn">＋ Add application</button><button class="secondary-btn danger-btn" id="resetBtn">Restore sample directory</button></div><p class="helper">The directory is stored in this browser's local storage. It is not synchronized between devices and is not a Docker API connection.</p></section>
+            <section class="settings-card about-card"><div class="settings-title"><div class="settings-icon">ⓘ</div><div><h2>About this PWA</h2><p>Generic starter for self-hosted environments.</p></div></div><ul><li>Responsive, installable Progressive Web App.</li><li>Local browser storage for configuration.</li><li>Offline shell caching when served over HTTPS or localhost.</li><li>No credentials or secrets are required.</li></ul><div class="version-tag">HOME LAB COMPANION <span>v1.0.0</span></div></section>
+          </div>
+        </div>
+      </section>
+      <footer><span>HOME LAB COMPANION <b>•</b> MADE FOR SELF-HOSTED LIFE</span><span>Local-first · Configurable · Responsive</span></footer>
+    </main>
+  </div>
+
+  <div class="modal-backdrop hidden" id="appModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <form class="modal" id="appForm">
+      <div class="modal-head"><div><div class="eyebrow muted">DIRECTORY ENTRY</div><h2 id="modalTitle">Add application</h2></div><button type="button" class="close-btn" id="closeModal" aria-label="Close">×</button></div>
+      <input type="hidden" id="appId">
+      <label class="field-label" for="appName">Application name *</label><input class="field" id="appName" required maxlength="60" placeholder="e.g. Grafana">
+      <label class="field-label" for="appUrl">Application URL</label><input class="field" id="appUrl" type="url" placeholder="https://service.example.com">
+      <p class="helper field-help">Leave blank if the URL is not configured yet. Use a complete URL, including https:// when appropriate.</p>
+      <div class="form-two"><div><label class="field-label" for="appCategory">Category *</label><select class="field" id="appCategory" required></select></div><div><label class="field-label" for="appIcon">Icon</label><select class="field" id="appIcon"><option value="▦">▦ App grid</option><option value="▤">▤ Server</option><option value="◉">◉ Monitor</option><option value="▶">▶ Media</option><option value="☁">☁ Cloud</option><option value="⌕">⌕ Search</option><option value="▧">▧ Files</option><option value="⚙">⚙ Settings</option><option value="◈">◈ Network</option><option value="✎">✎ Notes</option><option value="◷">◷ Backup</option><option value="✚">✚ Utility</option></select></div></div>
+      <label class="field-label" for="appDescription">Description</label><textarea class="field" id="appDescription" rows="2" maxlength="160" placeholder="What do you use this service for?"></textarea>
+      <label class="check-row"><input type="checkbox" id="appFavorite"> <span>Pin to favorite applications</span></label>
+      <div class="modal-actions"><button type="button" class="secondary-btn hidden" id="deleteAppBtn">Delete</button><span class="spacer"></span><button type="button" class="secondary-btn" id="cancelModal">Cancel</button><button type="submit" class="primary-btn">Save application</button></div>
+    </form>
+  </div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="js/config.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
