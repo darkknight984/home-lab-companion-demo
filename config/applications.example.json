@@ -1,0 +1,32 @@
+{
+  "workspaceName": "Home Lab Companion",
+  "apps": [
+    {
+      "id": "example-nas",
+      "name": "Primary NAS",
+      "category": "Infrastructure",
+      "url": "",
+      "icon": "\u25a4",
+      "description": "Primary storage and homelab host.",
+      "favorite": true
+    },
+    {
+      "id": "example-docker",
+      "name": "Docker Manager",
+      "category": "Administration",
+      "url": "",
+      "icon": "\u2699",
+      "description": "Manage your container stacks.",
+      "favorite": true
+    },
+    {
+      "id": "example-monitor",
+      "name": "Monitoring",
+      "category": "Monitoring",
+      "url": "",
+      "icon": "\u25c9",
+      "description": "Host and application metrics.",
+      "favorite": false
+    }
+  ]
+}
