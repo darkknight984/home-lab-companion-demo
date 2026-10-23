@@ -4,6 +4,10 @@
 
 Home Lab Companion is a generic, mobile-friendly Progressive Web App (PWA) for organizing and opening self-hosted applications. It is inspired by a real multi-service homelab, but is designed so other people can adapt it to their own Docker hosts, NAS devices, and services.
 
+## Application Preview
+
+![Home Lab Companion Dashboard](screenshots/01-home-dashboard-desktop.jpg)
+
 ## Included
 
 - Responsive dashboard for phones, tablets, and desktop browsers
